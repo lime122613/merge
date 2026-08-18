@@ -212,8 +212,17 @@ for row, idx in enumerate(st.session_state.order):
     c3.button("▼", key=f"dn{row}", disabled=row == len(items) - 1,
               on_click=swap, args=(row, row + 1), use_container_width=True)
 
-default_name = f"운영계획_통합_{datetime.now():%Y%m%d}.hwpx"
-out_name = st.text_input("저장할 파일 이름", value=default_name)
+now = datetime.now()
+_year = now.year
+_month = now.month
+# 3~7월 → 1학기, 나머지(8~12월, 1~2월) → 2학기
+_semester = 1 if 3 <= _month <= 7 else 2
+default_name = f"{_year}학년도 {_semester}학기 교수학습 및 평가 운영계획_OO과.hwpx"
+out_name = st.text_input(
+    "저장할 파일 이름",
+    value=default_name,
+    help="학년도·학기가 맞지 않으면 직접 수정해 주세요.",
+)
 
 # ------------------------------------------------------------------ 4. 실행
 if st.button("만들기", type="primary", use_container_width=True):
@@ -268,4 +277,4 @@ if st.button("만들기", type="primary", use_container_width=True):
     )
     if mode == "anon":
         st.caption("나이스에 올리기 전에 한/글에서 열어 지도교사 칸이 비었는지 확인해 주세요.")
-    st.caption("🔒 파일을 내려받으면 서버 메모리에서 삭제됩니다. 이 페이지를 닫으면 업로드한 파일에 더 이상 접근할 수 없습니다.")
+    
